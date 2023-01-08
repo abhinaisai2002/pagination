@@ -1,5 +1,5 @@
-import './App.css';
-import Pagination from './Pagination';
+
+import Pagination from './components/Pagination';
   
 function App() {
 
