@@ -1,3 +1,60 @@
-# https://www.robotstxt.org/robotstxt.html
-User-agent: *
-Disallow:
+const pA = document.getElementById("pa");
+const iRY = document.getElementById("interestRate");
+const tM = document.getElementById("tenure");
+
+function getEmiReducing(P, N, R) {
+    return (P * R * (Math.pow((1 + R), N) / (Math.pow((1 + R), N) - 1)));
+}
+
+function EstimateReducingInterestLoan() {
+    calculateEMI();
+    totalPayment();
+    totalInterest();
+    EstimateFixedInterestLoan();
+}
+
+function EstimateFixedInterestLoan() {
+    const pa = Number(pA.value);
+    const iry = Number(iRY.value);
+    const tm = Number(tM.value);
+
+    const totalInterestFixed = pa * iry * tm / 1200;
+    const totalPaymentFixed = pa + totalInterestFixed;
+    const emiFixed = totalPaymentFixed / tm;
+
+    document.getElementById("tInterestFixed").innerHTML = Number(totalInterestFixed).toFixed(2).toString();
+    document.getElementById("tPaymentFixed").innerHTML = Number(totalPaymentFixed).toFixed(2).toString();
+    document.getElementById("EMIFixed").innerHTML = Number(emiFixed).toFixed(2).toString();
+}
+
+function reducingLoan() {
+    const pa = Number(pA.value);
+    const iry = Number(iRY.value);
+    const interestRateMonth = Number(iry / 1200);
+    const tm = Number(tM.value);
+
+    const emiReducing = getEmiReducing(pa, tm, interestRateMonth);
+    const totalPaymentReducing = tm * emiReducing;
+    const totalInterestReducing = totalPaymentReducing - pa;
+
+    return {
+        emiReducing: emiReducing,
+        totalPaymentReducing: totalPaymentReducing,
+        totalInterestReducing: totalInterestReducing
+    };
+}
+
+function calculateEMI() {
+    const emiReducing = reducingLoan().emiReducing;
+    document.getElementById("EMI").innerHTML = Number(emiReducing).toFixed(2).toString();
+}
+
+function totalPayment() {
+    const totalPaymentReducing = reducingLoan().totalPaymentReducing;
+    document.getElementById("tPayment").innerHTML = Number(totalPaymentReducing).toFixed(2).toString();
+}
+
+function totalInterest() {
+    const totalInterestReducing = reducingLoan().totalInterestReducing;
+    document.getElementById("tInterest").innerText = Number(totalInterestReducing).toFixed(2).toString();
+}
